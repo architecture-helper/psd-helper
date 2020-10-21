@@ -1,0 +1,16 @@
+### IntelliJ ###
+.idea
+out/
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+!gradle-wrapper.jar
+
+gradle-app.setting
+.gradletasknamecache
+
+### Gitnarwhal stuff ###
+git/
+gitnarwhal.json

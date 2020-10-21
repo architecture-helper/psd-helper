@@ -1,0 +1,6 @@
+#!/bin/sh
+unset DISPLAY
+scriptname=$1
+[ -f "$scriptname" ] && scriptname=$(winepath -w "$scriptname")
+echo $scriptname
+wine "C:\inno\ISCC.exe" "$scriptname" "/q"

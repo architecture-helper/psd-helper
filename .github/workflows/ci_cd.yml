@@ -1,0 +1,60 @@
+on: push
+
+jobs:
+  #Unit test
+  test:
+    timeout-minutes: 5
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Install JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: 13
+        java-package: jdk
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+    - name: Cache dependancies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ./gradle
+          ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+            
+    - name: Run tests
+      run: |
+        ./gradlew test
+  
+  #Jar creation
+  jar:
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Install JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: 13
+        java-package: jdk
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+    - name: Cache dependancies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ./gradle
+          ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+            
+    - name: Create Jar
+      run: |
+        ./gradlew shadowJar
+        
+    - name: Upload JAR
+      uses: actions/upload-artifact@v1
+      with:
+        name: shadowJar
+        path: ./build/libs/gitnarwhal.jar
