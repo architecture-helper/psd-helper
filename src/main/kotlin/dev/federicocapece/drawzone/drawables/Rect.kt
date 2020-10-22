@@ -8,8 +8,8 @@ import javafx.scene.paint.Paint
 class Rect(
         override var x: Double,
         override var y: Double,
-        var width: Double,
-        var height: Double,
+        override var width: Double,
+        override var height: Double,
         var color: Paint = DrawZone.BLACK
 ): Drawable {
 

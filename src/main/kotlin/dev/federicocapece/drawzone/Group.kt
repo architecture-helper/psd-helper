@@ -15,6 +15,14 @@ class Group(override var x:Double = 0.0, override var y:Double = 0.0, private va
 
     fun group(x:Double = 0.0, y:Double = 0.0, parent: DrawZone? = this.parent) = Group(x,y,parent)
 
+    override var width: Double
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override var height: Double
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
     //the draw of a group simply calls the draw of each drawable that it has inside
     override fun draw(g: GraphicsContext) {
         forEach {
