@@ -1,8 +1,8 @@
 package dev.federicocapece.drawzone.drawables
 
-import dev.federicocapece.drawzone.DrawZone
 import dev.federicocapece.drawzone.Drawable
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 
 class Rect(
@@ -10,7 +10,7 @@ class Rect(
         override var y: Double,
         override var width: Double,
         override var height: Double,
-        var color: Paint = DrawZone.BLACK
+        var color: Paint = Color.BLACK
 ): Drawable {
 
     override fun draw(g: GraphicsContext) {

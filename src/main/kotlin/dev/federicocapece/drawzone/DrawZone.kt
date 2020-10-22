@@ -35,7 +35,6 @@ class DrawZone(width: Double = 500.0, height: Double = 500.0) : Pane() {
     }
 
     companion object{
-        val MONOSPACED: Font = Font.font("Monaco", 16.0)
-        val BLACK: Paint = Paint.valueOf("black")
+        val MONOSPACED: Font = Font.font("monospace", 16.0)
     }
 }

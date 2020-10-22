@@ -4,6 +4,7 @@ import dev.federicocapece.drawzone.DrawZone
 import dev.federicocapece.drawzone.Drawable
 import javafx.geometry.VPos
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import javafx.scene.text.Text
@@ -15,7 +16,7 @@ class Text(
         override var y: Double = 0.0,
         var font: Font = DrawZone.MONOSPACED,
         width: Double = Double.MAX_VALUE,
-        var color: Paint = DrawZone.BLACK
+        var color: Paint = Color.BLACK
 ): Drawable {
 
     override var width = Double.MAX_VALUE

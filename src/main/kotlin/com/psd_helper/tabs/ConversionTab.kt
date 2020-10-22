@@ -27,38 +27,48 @@ class ConversionTab : Tab("Conversion"){
 
         content = borderpane {
             paddingAll = padding
-            top = gridpane {
-                hgap = padding
-                vgap = hgap
-                row {
-                    label("input")
-                    inputTextField = textfield("10")
-                    inputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
-                        selectionModel.selectFirst()
+            top = vbox {
+                paddingAll = padding
+                gridpane {
+                    hgap = padding
+                    vgap = hgap
+                    row {
+                        label("input")
+                        inputTextField = textfield("10")
+                        inputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
+                            selectionModel.selectFirst()
+                        }
+                    }
+                    row{
+                        label("output")
+                        outputTextField = textfield("out") {
+                            isEditable = false
+                        }
+                        outputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
+                            selectionModel.selectLast()
+                            selectionModel.selectPrevious()
+                        }
                     }
                 }
-                row{
-                    label("output")
-                    outputTextField = textfield("out") {
-                        isEditable = false
-                    }
-                    outputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
-                        selectionModel.selectLast()
-                        selectionModel.selectPrevious()
+                gridpane {
+                    hgap = padding
+                    vgap = hgap
+                    row{
+                        button("work") { setOnAction { outputTextField!!.text =
+                                Conversions.convert(
+                                        inputNum = inputTextField!!.text,
+                                        inputBase = inputBaseComboBox!!.selectedItem!!,
+                                        outputBase =  outputBaseComboBox!!.selectedItem!!,
+                                        canvas =  canvas.items
+                                )
+                        } }
                     }
                 }
             }
-            center = canvas
-            bottom = button("work") { setOnAction { outputTextField!!.text =
-                    Conversions.convert(
-                            inputNum = inputTextField!!.text,
-                            inputBase = inputBaseComboBox!!.selectedItem!!,
-                            outputBase =  outputBaseComboBox!!.selectedItem!!,
-                            canvas =  canvas.items
-                    )
-            } }
-        }
 
+
+            center = canvas
+        }
     }
 
 

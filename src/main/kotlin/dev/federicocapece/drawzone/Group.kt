@@ -4,7 +4,7 @@ import javafx.collections.ListChangeListener
 import javafx.collections.ModifiableObservableListBase
 import javafx.scene.canvas.GraphicsContext
 
-class Group(override var x:Double = 0.0, override var y:Double = 0.0, private val parent: DrawZone?) : ModifiableObservableListBase<Drawable>(), Drawable {
+open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var parent: DrawZone? = null) : ModifiableObservableListBase<Drawable>(), Drawable {
 
     init {
         //setting the edit of a single element in the whole group to refresh the parent
@@ -38,8 +38,10 @@ class Group(override var x:Double = 0.0, override var y:Double = 0.0, private va
     override fun get(index: Int): Drawable? =
             items[index]
 
-    override fun doAdd(index: Int, element: Drawable?) =
-            items.add(index, element)
+    override fun doAdd(index: Int, element: Drawable){
+        items.add(index, element)
+        (element as? Group)?.parent = this.parent
+    }
 
     override fun doSet(index: Int, element: Drawable?): Drawable? =
             items.set(index, element)
