@@ -14,16 +14,18 @@ import java.lang.Exception
 import kotlin.math.pow
 
 @Index(0)
-class ConversionTab : Tab("Conversion"){
+class ConversionTab : Tab("Base Conversion"){
     private val canvas = DrawZone()
 
     init {
         val padding = 10.0
 
-        var inputBaseComboBox : ComboBox<Int>? = null
-        var outputBaseComboBox : ComboBox<Int>? = null
+        var inputBaseComboBox : ComboBox<Conversions.Base>? = null
+        var outputBaseComboBox : ComboBox<Conversions.Base>? = null
         var inputTextField :TextField? = null
         var outputTextField: TextField? = null
+        var inputCa2 :TextField? = null
+        var outputCa2 :TextField? = null
 
         content = borderpane {
             paddingAll = padding
@@ -35,16 +37,17 @@ class ConversionTab : Tab("Conversion"){
                     row {
                         label("input")
                         inputTextField = textfield("10")
-                        inputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
+                        inputCa2 = textfield("4")
+
+                        inputBaseComboBox = combobox<Conversions.Base>(values = Conversions.Base.values().toList()){
                             selectionModel.selectFirst()
                         }
                     }
                     row{
                         label("output")
-                        outputTextField = textfield("out") {
-                            isEditable = false
-                        }
-                        outputBaseComboBox = combobox<Int>(values = Constants.NUMERIC_BASES){
+                        outputTextField = textfield("out") {isEditable = false}
+                        outputCa2 = textfield("4")
+                        outputBaseComboBox = combobox<Conversions.Base>(values = Conversions.Base.values().toList()){
                             selectionModel.selectLast()
                             selectionModel.selectPrevious()
                         }
@@ -54,13 +57,19 @@ class ConversionTab : Tab("Conversion"){
                     hgap = padding
                     vgap = hgap
                     row{
-                        button("work") { setOnAction { outputTextField!!.text =
+                        button("work") { setOnAction {
+                            //clearing previous elaborations
+                            canvas.items.clear()
+                            outputTextField!!.text =
                                 Conversions.convert(
                                         inputNum = inputTextField!!.text,
                                         inputBase = inputBaseComboBox!!.selectedItem!!,
                                         outputBase =  outputBaseComboBox!!.selectedItem!!,
-                                        canvas =  canvas.items
+                                        canvas =  canvas.items,
+                                        inputCa2 = inputCa2!!.text.toIntOrNull() ?: 0,
+                                        outputCa2 = outputCa2!!.text.toIntOrNull() ?: 0,
                                 )
+                            canvas.refresh()
                         } }
                     }
                 }
