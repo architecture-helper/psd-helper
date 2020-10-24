@@ -3,6 +3,7 @@ package dev.federicocapece.drawzone
 import javafx.collections.ListChangeListener
 import javafx.collections.ModifiableObservableListBase
 import javafx.scene.canvas.GraphicsContext
+import kotlin.math.absoluteValue
 
 open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var parent: DrawZone? = null) : ModifiableObservableListBase<Drawable>(), Drawable {
 
@@ -13,14 +14,28 @@ open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var p
         }
     }
 
-    fun group(x:Double = 0.0, y:Double = 0.0, parent: DrawZone? = this.parent) = Group(x,y,parent)
+    fun group(x:Double = 0.0, y:Double = 0.0, parent: DrawZone? = this.parent): Group {
+        val subGroup = Group(x,y,parent)
+        add(subGroup)
+        return subGroup
+    }
 
     override var width: Double
-        get() = TODO("Not yet implemented")
+        get(){
+            val rightestPoint = map {it.x + it.width}.max() ?: .0
+            val leftestPoint = map { it.x }.min() ?: .0
+
+            return (rightestPoint-leftestPoint).absoluteValue
+        }
         set(value) {}
 
     override var height: Double
-        get() = TODO("Not yet implemented")
+        get(){
+            val lowestPoint = map {it.y + it.height}.max() ?: .0
+            val highestPoint = map { it.y }.min() ?: .0
+
+            return (lowestPoint-highestPoint).absoluteValue
+        }
         set(value) {}
 
     //the draw of a group simply calls the draw of each drawable that it has inside
