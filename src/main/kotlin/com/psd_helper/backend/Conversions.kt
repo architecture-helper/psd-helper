@@ -26,16 +26,6 @@ object Conversions {
 
 
     fun convert(inputNum:String, inputBase:Base, outputBase:Base, canvas: Group, inputCa2:Int=0, outputCa2:Int=0) : String{
-        /*quick convert to check results later : TODO: TURN THIS INTO A UNIT TEST!!!
-        try{
-            outputTextField.style = "-fx-text-fill: black;";
-            outputTextField.text = inputTextField.text.toInt(inputBase).toString(outputBase).toUpperCase()
-        }catch (ex:Exception){
-            outputTextField.style = "-fx-text-fill: red;";
-            outputTextField.text = "error"
-        }
-        */
-
         var canvas = canvas
         var inputNum = inputNum
         var inputBase = inputBase
