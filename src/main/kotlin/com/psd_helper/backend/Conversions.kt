@@ -1,12 +1,14 @@
 package com.psd_helper.backend
 
+import com.psd_helper.Constants.DIGITS
 import com.psd_helper.drawable.Division
+import com.psd_helper.rtlChunk
 import com.psd_helper.spaceFill
 import com.psd_helper.superScript
 import com.psd_helper.zeroFill
 import dev.federicocapece.drawzone.Group
 import dev.federicocapece.drawzone.drawables.Text
-import kotlin.math.pow
+import kotlin.math.*
 
 object Conversions {
     enum class Base{
@@ -57,12 +59,12 @@ object Conversions {
         //doing the first conversion
         var output:String = when(inputBase){
             Base.B10 -> consecutiveDivisions(inputNum, outputBase, canvas)
-            else -> quickB2xToB2x(inputNum, inputBase, outputBase, canvas)
+            else -> b2xToB2x(inputNum, inputBase, outputBase, canvas)
         }
 
         //eventually converting to Ca2
         if(outputBase == Base.CA2){
-            canvas = canvas.group(canvas.y, canvas.bottom)
+            canvas = canvas.group(canvas.x, canvas.bottom)
             output = complement(output, outputCa2, canvas)
         }
 
@@ -70,7 +72,13 @@ object Conversions {
     }
 
     private fun complement(inputB2: String, bitCount: Int, canvas:Group): String {
-        TODO("Not yet implemented")
+        val negated = inputB2.map { if(it=='0') '1' else '0' }.joinToString("");
+        val arrow = "↓".spaceFill(inputB2.length/2+1)
+
+        val output = "$inputB2\n$arrow\n$negated\n$arrow\n"
+        canvas += Text(output+"Soz, le somme non sono ancora state implementate")
+        //TODO("Sum +1 in base 2 not yet created")
+        return "error"
     }
 
     private fun consecutiveDivisions(inputNum: String, outputBase: Base, canvas: Group): String {
@@ -88,15 +96,76 @@ object Conversions {
             toDivide /= outputBase
 
             val divisionStartingNumber: Text = lastDivision?.resultText ?: firstDivisionText
-            lastDivision = Division(divisionStartingNumber, outputBase.toInt(), lastDivision ?: canvas)
+            lastDivision = Division(divisionStartingNumber, outputBase, lastDivision ?: canvas)
         }
 
 
-        return remainders.map { it.toString(outputBase.toInt()) }.reversed().joinToString("").toUpperCase()
+        return remainders.map { it.toString(outputBase) }.reversed().joinToString("").toUpperCase()
     }
 
-    private fun quickB2xToB2x(inputNum: String, inputBase: Base, outputBase: Base, canvas: Group): String {
-        TODO("Not yet implemented")
+    private fun b2xToB2x(inputNum: String, inputBase: Base, outputBase: Base, canvas: Group): String {
+        return when{
+            outputBase == Base.B2 -> b2xToB2(inputNum, inputBase, canvas)
+            inputBase  == Base.B2 -> b2toB2x(inputNum, outputBase, canvas)
+            else -> b2toB2x(b2xToB2(inputNum, inputBase, canvas), outputBase, canvas)
+        }
+    }
+
+    private fun b2xToB2(inputNum: String, inputBase: Base, canvas: Group): String{
+        val digitsPerBlock = log2(inputBase.toInt().toDouble()).toInt()
+
+        val convertedDigits = inputNum.map {
+            //based num -> int -> based 2 num + zerofill
+            it.toString().toInt(inputBase.toInt()).toString(2).zeroFill(digitsPerBlock)
+        }
+
+        //printing the input digits spaced
+        var output = inputNum.map { (it +" ".repeat(digitsPerBlock/2)).spaceFill(digitsPerBlock) }.joinToString(" ")+"\n"
+
+        //printing the arrows spaced
+        output += inputNum.map { ("↓" +" ".repeat(digitsPerBlock/2)).spaceFill(digitsPerBlock) }.joinToString (" ")+"\n"
+
+        //printing the output chunks
+        output += convertedDigits.joinToString(" ")+"\n"
+
+        //adding the output to the canvas
+        canvas.add(Text(output, y = canvas.bottom))
+
+        return convertedDigits.joinToString ("").trimStart('0')
+    }
+
+    private fun b2toB2x(inputNum: String, outputBase: Base, canvas: Group): String{
+        val digitsPerBlock = log2(outputBase.toInt().toDouble()).toInt()
+
+        //region extending the number with the necessary zeros
+        val correctLen =
+                if(inputNum.length % digitsPerBlock != 0)
+                    (inputNum.length/digitsPerBlock + 1) * digitsPerBlock
+                else
+                    inputNum.length
+        //endregion
+
+        //chunking the number
+        val chunks = inputNum.zeroFill(correctLen).rtlChunk(digitsPerBlock)
+        //converting each chunk individually
+        val convertedChunks = chunks.map { it.toInt(2).toString(outputBase.toInt()).toUpperCase() }
+
+        //region printing the procedure to the canvas
+        //separating the number every x digits
+        var output = chunks.joinToString(" ") +"\n"
+
+        //printing the arrows with the right spacing
+        output += chunks.map { ("↓" +" ".repeat(digitsPerBlock/2)).spaceFill(digitsPerBlock) }.joinToString (" ")+"\n"
+
+        //printing the converted chunks with the right spacing
+        output += convertedChunks.map { (it +" ".repeat(digitsPerBlock/2)).spaceFill(digitsPerBlock) }.joinToString (" ")+"\n"
+
+        //adding the output to the canvas
+        canvas.add(Text(output, y = canvas.bottom))
+        //endregion
+
+        //returning the converted chunks united
+        return convertedChunks.joinToString("").trimStart('0')
     }
 
     //sum of positional digits
@@ -142,7 +211,7 @@ object Conversions {
         //extra step: HEX TO DEC
         if (inputBase == Base.B16){
             // A*16^2 -> 10*16^2
-            sums.forEach { it.number = it.number.toInt(16).toString()  }
+            sums.forEach { DIGITS.indexOf(it) }
             output += sums.joinToString(" + ") + endLine
         }
 
@@ -164,3 +233,4 @@ object Conversions {
     }
 
 }
+

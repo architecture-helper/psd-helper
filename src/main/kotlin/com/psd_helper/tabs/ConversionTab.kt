@@ -17,7 +17,6 @@ import kotlin.reflect.full.declaredMembers
 class ConversionTab : Tab("Base Conversion"){
     private val canvas = DrawZone()
 
-
     lateinit var input : BasedNumberInput
     lateinit var output: BasedNumberInput
 
@@ -55,6 +54,7 @@ class ConversionTab : Tab("Base Conversion"){
                 inputCa2 = input.ca2Bits,
                 outputCa2 = output.ca2Bits
         )
+
     }
 
     private fun swap(){

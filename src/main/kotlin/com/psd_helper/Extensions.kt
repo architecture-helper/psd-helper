@@ -20,3 +20,7 @@ fun String.superScript() = this.toInt().superScript()
 fun Int.subScript() = this.toString().map { Constants.SUPERSCRIPT[it.toString().toInt()]}.joinToString("")
 fun String.subScript() = this.toInt().subScript()
 //endregion
+
+//string reverse chunking
+fun String.rtlChunk(length: Int) = this.reversed().chunked(length).map { it.reversed() }.reversed()
+fun CharSequence.rtlChunk(length: Int) = this.toString().rtlChunk(length)
