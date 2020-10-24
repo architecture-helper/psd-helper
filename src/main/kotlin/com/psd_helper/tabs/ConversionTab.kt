@@ -1,84 +1,72 @@
 package com.psd_helper.tabs
 
-import com.psd_helper.*
 import com.psd_helper.backend.Conversions
+import com.psd_helper.components.BasedNumberInput
+import com.psd_helper.components.basedNumberInput
 import dev.federicocapece.drawzone.DrawZone
-import dev.federicocapece.drawzone.Group
-import dev.federicocapece.drawzone.drawables.*
-import javafx.beans.value.ObservableValue
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Tab
 import javafx.scene.control.TextField
 import tornadofx.*
-import java.lang.Exception
-import kotlin.math.pow
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.declaredMembers
 
 @Index(0)
 class ConversionTab : Tab("Base Conversion"){
     private val canvas = DrawZone()
 
+
+    lateinit var input : BasedNumberInput
+    lateinit var output: BasedNumberInput
+
     init {
         val padding = 10.0
-
-        var inputBaseComboBox : ComboBox<Conversions.Base>? = null
-        var outputBaseComboBox : ComboBox<Conversions.Base>? = null
-        var inputTextField :TextField? = null
-        var outputTextField: TextField? = null
-        var inputCa2 :TextField? = null
-        var outputCa2 :TextField? = null
 
         content = borderpane {
             paddingAll = padding
             top = vbox {
                 paddingAll = padding
-                gridpane {
-                    hgap = padding
-                    vgap = hgap
-                    row {
-                        label("input")
-                        inputTextField = textfield("10")
-                        inputCa2 = textfield("4")
-
-                        inputBaseComboBox = combobox<Conversions.Base>(values = Conversions.Base.values().toList()){
-                            selectionModel.selectFirst()
-                        }
-                    }
-                    row{
-                        label("output")
-                        outputTextField = textfield("out") {isEditable = false}
-                        outputCa2 = textfield("4")
-                        outputBaseComboBox = combobox<Conversions.Base>(values = Conversions.Base.values().toList()){
-                            selectionModel.selectLast()
-                            selectionModel.selectPrevious()
-                        }
-                    }
+                input = basedNumberInput(Conversions.Base.B10, "1025")
+                output = basedNumberInput(Conversions.Base.B2, "0", false){
+                    val output = this
+                    with(BasedNumberInput::class.java.getDeclaredField("fieldValue")){
+                        isAccessible = true
+                        get(output) as TextField
+                    }.isEditable = false
                 }
-                gridpane {
-                    hgap = padding
-                    vgap = hgap
-                    row{
-                        button("work") { setOnAction {
-                            //clearing previous elaborations
-                            canvas.items.clear()
-                            outputTextField!!.text =
-                                Conversions.convert(
-                                        inputNum = inputTextField!!.text,
-                                        inputBase = inputBaseComboBox!!.selectedItem!!,
-                                        outputBase =  outputBaseComboBox!!.selectedItem!!,
-                                        canvas =  canvas.items,
-                                        inputCa2 = inputCa2!!.text.toIntOrNull() ?: 0,
-                                        outputCa2 = outputCa2!!.text.toIntOrNull() ?: 0,
-                                )
-                            canvas.refresh()
-                        } }
-                    }
+                hbox {
+                    button("work") {setOnAction {convert()}}
+                    button("swap") {setOnAction {swap()}}
                 }
+                center = canvas
             }
-
-
-            center = canvas
         }
     }
 
+    private fun convert(){
+        canvas.items.clear()
+        output.value = Conversions.convert(
+                inputNum = input.value,
+                inputBase = input.base,
+                outputBase = output.base,
+                canvas = canvas.items,
+                inputCa2 = input.ca2Bits,
+                outputCa2 = output.ca2Bits
+        )
+    }
 
+    private fun swap(){
+        //saving values before the validation after the swap ruins them
+        var valueIn = input.value
+        var valueOut = output.value
+
+        //swapping bases
+        input.base = output.base.also { output.base = input.base }
+
+        //reassigning values
+        input.value = valueOut
+        output.value = valueIn
+    }
 }
