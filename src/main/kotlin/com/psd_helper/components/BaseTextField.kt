@@ -1,17 +1,14 @@
 package com.psd_helper.components
 
+import com.psd_helper.Constants.DIGITS
 import com.psd_helper.backend.Conversions
 import javafx.application.Platform
 import javafx.beans.value.ChangeListener
 import javafx.event.EventTarget
 import javafx.scene.control.TextField
 import tornadofx.*
-import java.lang.Exception
 
 class BaseTextField(base: Conversions.Base, value: String = "0", var validate: Boolean = true) : TextField(){
-    companion object{
-        val VALUES = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
-    }
 
     var base = base
         set(value) {
@@ -44,7 +41,7 @@ class BaseTextField(base: Conversions.Base, value: String = "0", var validate: B
         val newValue = newValue?.toUpperCase() ?: return false
 
         newValue.forEach {
-            if(VALUES.indexOf(it) !in 0 until base.toInt())
+            if(DIGITS.indexOf(it) !in 0 until base.toInt())
                 return false
         }
         return true
