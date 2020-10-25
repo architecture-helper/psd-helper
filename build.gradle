@@ -140,7 +140,7 @@ compileKotlin {
 //TODO: CHANGE TASKS TO INCREMENTAL TASKS
 //TODO: TOO MUCH HARDCODED STUFF, DEFINE VARIABLES FOR RELEASES
 class JREPackagerExtension{
-    String jreVersion = '13'
+    String jreVersion = '11'
     String innoSetupFile = "/gradle/innosetup/inno.iss"
     String iconFile = "/gradle/innosetup/icon.ico"
     String replaceInnoSetupVersion = null
@@ -265,11 +265,11 @@ class JREPackager implements Plugin<Project> {
 
                 PrintWriter out = new PrintWriter(project.buildDir.absolutePath + "/installer/linux_x64/deb/DEBIAN/control")
                 out.print("""
-Package: gitnarwhal
+Package: psd-helper
 Version: $version
 Architecture: all
-Maintainer: github.com/fc-dev/GitNarwhal
-Description: Cross-platform Git GUI client
+Maintainer: github.com/sgravato-productions/psd-helper
+Description: Helper per Progettazione di Sistemi Digitali
 """);
                 out.close()
 
