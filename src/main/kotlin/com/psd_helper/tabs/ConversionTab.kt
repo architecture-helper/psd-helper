@@ -9,6 +9,10 @@ import javafx.event.EventHandler
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Tab
 import javafx.scene.control.TextField
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import tornadofx.*
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.declaredMembers
@@ -36,8 +40,16 @@ class ConversionTab : Tab("Base Conversion"){
                     }.isEditable = false
                 }
                 hbox {
-                    button("work") {setOnAction {convert()}}
-                    button("swap") {setOnAction {swap()}}
+                    button("Convert") {
+                        setOnAction {convert()}
+                        hgrow = Priority.ALWAYS
+                        maxWidth = Double.MAX_VALUE
+                    }
+                    button("Swap") {
+                        setOnAction {swap()}
+                        hgrow = Priority.ALWAYS
+                        maxWidth = Double.MAX_VALUE
+                    }
                 }
                 center = canvas
             }

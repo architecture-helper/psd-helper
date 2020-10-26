@@ -5,11 +5,11 @@ import javafx.event.EventTarget
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
-import javafx.scene.layout.Pane
-import javafx.scene.layout.VBox
+import javafx.scene.layout.*
+import javafx.scene.paint.Color
 import tornadofx.*
 
-class BasedNumberInput(startBase:Conversions.Base = Conversions.Base.B10, startValue: String = "0", validate: Boolean = true) : Pane(){
+class BasedNumberInput(startBase:Conversions.Base = Conversions.Base.B10, startValue: String = "0", validate: Boolean = true) : GridPane(){
     //region public properties
     var base: Conversions.Base
         get() = fieldBase.selectedItem!!
@@ -35,26 +35,6 @@ class BasedNumberInput(startBase:Conversions.Base = Conversions.Base.B10, startV
     private var showOnCa2 = arrayListOf<Node>()
     //endregion
 
-    //UI DEFINITION
-    private val root by lazy {
-        gridpane {
-            row {
-                label("value:")
-                label("base:")
-                showOnCa2.add(label("Ca2 bits(0 = count them):"))
-            }
-            row {
-                fieldValue = baseTextField(startBase, startValue, validate)
-                fieldBase = combobox<Conversions.Base>(values = Conversions.Base.values().toList()) {
-                    selectionModel.selectedItemProperty().onChange(updateBase)
-                }
-                fieldBase.selectionModel.select(startBase)
-                fieldCa2Bits = baseTextField(startBase, "0")
-                showOnCa2.add(fieldCa2Bits)
-            }
-        }
-    }
-
     //events
     private val updateBase : (Conversions.Base?) -> Unit = { newBase ->
         fieldValue.base = newBase!!
@@ -66,7 +46,25 @@ class BasedNumberInput(startBase:Conversions.Base = Conversions.Base.B10, startV
 
 
     init {
-        add(root)
+        row {
+            label("value:")
+            label("base:")
+            showOnCa2.add(label("Ca2 bits(0 = count them):"))
+        }
+        row {
+            fieldValue = baseTextField(startBase, startValue, validate)
+            fieldBase = combobox<Conversions.Base>(values = Conversions.Base.values().toList()) {
+                selectionModel.selectedItemProperty().onChange(updateBase)
+            }
+            fieldBase.selectionModel.select(startBase)
+            fieldCa2Bits = baseTextField(startBase, "0")
+            showOnCa2.add(fieldCa2Bits)
+        }
+
+        with(constraintsForColumn(0)){
+            hgrow = Priority.ALWAYS
+            isFillWidth = true
+        }
         updateBase(base)
     }
 }
