@@ -1,3 +1,4 @@
+import com.psd_helper.backend.Conversions
 import com.psd_helper.drawable.Division
 import dev.federicocapece.drawzone.drawables.Text
 import org.junit.jupiter.api.*
@@ -22,6 +23,40 @@ class MathTests {
 
     }
 
-    //TODO: write a unit test for the binary sum
+    @TestFactory
+    fun sum(): List<DynamicTest> {
+        val bases = Conversions.Base.values().filter { it != Conversions.Base.CA2 }
+
+        val output = arrayListOf<DynamicTest>()
+
+        repeat(Tests.NTIMES/bases.count()){_->
+            output.addAll(
+                    bases.map {base->
+                        DynamicTest.dynamicTest("Base $base sum test"){
+
+                            //picking random number and converting it to base first
+                            val inputNumber1 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
+                            val inputNumber2 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
+
+                            val inputForProgram1 = inputNumber1.toString(base.toInt())
+                            val inputForProgram2 = inputNumber2.toString(base.toInt())
+
+
+                            println("Sum($base): $inputForProgram1 + $inputForProgram2")
+
+                            val outputByProgram = PositionalSum(inputForProgram1, inputForProgram2, base).result.text.trim()
+                            val outputCorrect = (inputNumber1 + inputNumber2).toString(base.toInt())
+
+                            Assertions.assertEquals(outputCorrect.toUpperCase(), outputByProgram.toUpperCase())
+                        }
+                    }
+            )
+        }
+        return output
+    }
+
+    fun ca2Sum(){
+        //TODO: write unit test for CA2 PositionalSum
+    }
 
 }
