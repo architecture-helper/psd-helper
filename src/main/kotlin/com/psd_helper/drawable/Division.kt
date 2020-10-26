@@ -1,15 +1,13 @@
 package com.psd_helper.drawable
 
-import com.psd_helper.backend.Conversions
 import com.psd_helper.spaceFill
 import dev.federicocapece.drawzone.Group
 import dev.federicocapece.drawzone.drawables.Line
 import dev.federicocapece.drawzone.drawables.Text
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 
 class Division(toDivideText: Text, dividend:Int, parent : Group, reassign : Boolean = true) :
-        Group(toDivideText.x, toDivideText.y, parent = parent.parent) {
+        Group(toDivideText.x, toDivideText.y, toUpdate = parent.toUpdate) {
 
     private val VGAP = 3
     private val HGAP = 7
@@ -71,11 +69,18 @@ class Division(toDivideText: Text, dividend:Int, parent : Group, reassign : Bool
                     calculationsTexts.last().text+= bringDown
 
                 boughtDownNumbers++
+
+                //if after this number is down i can't divide then i add a 0 to the result
+                if(remainder<dividend && resultString.isNotEmpty())
+                    resultString += "0"
+
             }
         }
 
+        //extra step, if the
+
         //setting the result
-        resultText.text = if(resultString.isNotEmpty()) resultString else "0"
+        resultText.text = if(resultString.isNotEmpty()) resultString.trim() else "0"
         //endregion
 
         //region adding the created texts to the drawing group

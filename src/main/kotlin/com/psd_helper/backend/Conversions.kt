@@ -48,7 +48,7 @@ object Conversions {
 
         //doing the first conversion
         var output:String = when(inputBase){
-            Base.B10 -> consecutiveDivisions(inputNum, outputBase, canvas)
+            Base.B10 -> fromB10(inputNum, outputBase, canvas)
             else -> b2xToB2x(inputNum, inputBase, outputBase, canvas)
         }
 
@@ -71,7 +71,7 @@ object Conversions {
         return "error"
     }
 
-    private fun consecutiveDivisions(inputNum: String, outputBase: Base, canvas: Group): String {
+    private fun fromB10(inputNum: String, outputBase: Base, canvas: Group): String {
         val outputBase = outputBase.toInt()
         //write number
         var toDivide:Int = inputNum.toInt()
