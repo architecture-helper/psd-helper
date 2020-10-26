@@ -11,7 +11,7 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
 
 class Text(
-        var text: String,
+        var text: String = "",
         override var x: Double = 0.0,
         override var y: Double = 0.0,
         var font: Font = DrawZone.MONOSPACED,
@@ -45,5 +45,7 @@ class Text(
         g.font = font
         g.fillText(text, x, y, width)
     }
+
+    override fun toString(): String = text
 
 }
