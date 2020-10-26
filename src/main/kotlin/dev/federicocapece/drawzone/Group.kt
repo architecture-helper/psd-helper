@@ -5,16 +5,16 @@ import javafx.collections.ModifiableObservableListBase
 import javafx.scene.canvas.GraphicsContext
 import kotlin.math.absoluteValue
 
-open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var parent: DrawZone? = null) : ModifiableObservableListBase<Drawable>(), Drawable {
+open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var toUpdate: DrawZone? = null) : ModifiableObservableListBase<Drawable>(), Drawable {
 
     init {
         //setting the edit of a single element in the whole group to refresh the parent
         addListener{ _: ListChangeListener.Change<out Drawable>? ->
-            parent?.refresh();
+            toUpdate?.refresh();
         }
     }
 
-    fun group(x:Double = 0.0, y:Double = 0.0, parent: DrawZone? = this.parent): Group {
+    fun group(x:Double = 0.0, y:Double = 0.0, parent: DrawZone? = this.toUpdate): Group {
         val subGroup = Group(x,y,parent)
         add(subGroup)
         return subGroup
@@ -55,7 +55,7 @@ open class Group(override var x:Double = 0.0, override var y:Double = 0.0, var p
 
     override fun doAdd(index: Int, element: Drawable){
         items.add(index, element)
-        (element as? Group)?.parent = this.parent
+        (element as? Group)?.toUpdate = this.toUpdate
     }
 
     override fun doSet(index: Int, element: Drawable?): Drawable? =

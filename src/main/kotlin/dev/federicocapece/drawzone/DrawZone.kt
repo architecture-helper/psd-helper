@@ -2,14 +2,13 @@ package dev.federicocapece.drawzone
 
 import javafx.scene.canvas.Canvas
 import javafx.scene.layout.Pane
-import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import tornadofx.*
 
 
 class DrawZone(width: Double = 500.0, height: Double = 500.0) : Pane() {
     private val canvas: Canvas = Canvas()
-    val items = Group(parent = this)
+    val items = Group(toUpdate = this)
 
     init {
         //creating the canvas and linking it to the pane
