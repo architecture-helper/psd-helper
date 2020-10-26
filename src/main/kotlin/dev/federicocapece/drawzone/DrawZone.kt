@@ -1,7 +1,10 @@
 package dev.federicocapece.drawzone
 
 import javafx.scene.canvas.Canvas
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.Pane
+import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import tornadofx.*
 
@@ -11,6 +14,8 @@ class DrawZone(width: Double = 500.0, height: Double = 500.0) : Pane() {
     val items = Group(toUpdate = this)
 
     init {
+        background = Background(BackgroundFill(Color.WHITE,null,null))
+
         //creating the canvas and linking it to the pane
         this.add(canvas)
         canvas.widthProperty().bind(widthProperty())
