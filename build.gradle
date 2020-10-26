@@ -34,6 +34,9 @@ plugins {
     id "nebula.ospackage" version "8.4.1"
     id "edu.sc.seis.macAppBundle" version "2.3.0"
 
+    //TEST OUTPUT PLUGIN
+    id "com.adarshr.test-logger" version "2.1.1"
+
 }
 
 repositories {
