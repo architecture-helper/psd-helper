@@ -10,7 +10,7 @@ class MathTests {
     }
 
 
-    @RepeatedTest(Tests.NTIMES)
+    @RepeatedTest(Tests.NTIMES, name = RepeatedTest.LONG_DISPLAY_NAME)
     fun division(){
         val (number, dividend) = arrayOf(Tests.random.nextInt(0,Int.MAX_VALUE), Tests.random.nextInt(0,Int.MAX_VALUE)).sortedDescending()
 
@@ -29,29 +29,26 @@ class MathTests {
 
         val output = arrayListOf<DynamicTest>()
 
-        repeat(Tests.NTIMES/bases.count()){_->
-            output.addAll(
-                    bases.map {base->
-                        DynamicTest.dynamicTest("Base $base sum test"){
+        val times = Tests.NTIMES/bases.count()
+        bases.map {base-> repeat(times){ index ->
+            output.add(DynamicTest.dynamicTest("Sum base $base: repetition $index of $times"){
+                //picking random number and converting it to base first
+                val inputNumber1 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
+                val inputNumber2 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
 
-                            //picking random number and converting it to base first
-                            val inputNumber1 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
-                            val inputNumber2 = Tests.random.nextInt(0,Int.MAX_VALUE/2)
-
-                            val inputForProgram1 = inputNumber1.toString(base.toInt())
-                            val inputForProgram2 = inputNumber2.toString(base.toInt())
+                val inputForProgram1 = inputNumber1.toString(base.toInt())
+                val inputForProgram2 = inputNumber2.toString(base.toInt())
 
 
-                            println("Sum($base): $inputForProgram1 + $inputForProgram2")
+                println("Sum($base): $inputForProgram1 + $inputForProgram2")
 
-                            val outputByProgram = PositionalSum(inputForProgram1, inputForProgram2, base).result.text.trim()
-                            val outputCorrect = (inputNumber1 + inputNumber2).toString(base.toInt())
+                val outputByProgram = PositionalSum(inputForProgram1, inputForProgram2, base).result.text.trim()
+                val outputCorrect = (inputNumber1 + inputNumber2).toString(base.toInt())
 
-                            Assertions.assertEquals(outputCorrect.toUpperCase(), outputByProgram.toUpperCase())
-                        }
-                    }
-            )
-        }
+                Assertions.assertEquals(outputCorrect.toUpperCase(), outputByProgram.toUpperCase())
+            })
+
+        } }
         return output
     }
 

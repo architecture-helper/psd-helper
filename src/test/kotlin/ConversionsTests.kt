@@ -17,27 +17,26 @@ class ConversionsTests {
             }
         }.flatten().filter { it.first != it.second }.filter { it.first != Conversions.Base.CA2 && it.second != Conversions.Base.CA2 }
 
-        var output = arrayListOf<DynamicTest>()
+        val output = arrayListOf<DynamicTest>()
 
-        repeat(Tests.NTIMES/conversionCombos.count()){
-            output.addAll(
-                    conversionCombos.map {
-                        DynamicTest.dynamicTest("Base ${it.first} to Base ${it.second} conversion test"){
-                            //picking random number and converting it to base first
-                            val inputNumber = Tests.random.nextInt(0,Int.MAX_VALUE)
-                            val inputForProgram = inputNumber.toString(it.first.toInt())
+        val times = Tests.NTIMES / conversionCombos.count()
+        conversionCombos.map {bases -> repeat(times) { index->
+            output.add(DynamicTest.dynamicTest("Conversion ${bases.first} to ${bases.second}: repetition $index of $times") {
+                //picking random number and converting it to base first
+                val inputNumber = Tests.random.nextInt(0, Int.MAX_VALUE)
+                val inputForProgram = inputNumber.toString(bases.first.toInt())
 
 
-                            println("Converting: $inputForProgram (${it.first}) to base ${it.second}")
+                println("Converting: $inputForProgram (${bases.first}) to base ${bases.second}")
 
-                            val outputByProgram = Conversions.convert(inputForProgram, it.first, it.second, Tests.canvas)
-                            val outputCorrect = inputNumber.toString(it.second.toInt())
+                val outputByProgram = Conversions.convert(inputForProgram, bases.first, bases.second, Tests.canvas)
+                val outputCorrect = inputNumber.toString(bases.second.toInt())
 
-                            Assertions.assertEquals(outputCorrect.toUpperCase(), outputByProgram.toUpperCase())
-                        }
-                    }
-            )
-        }
+                Assertions.assertEquals(outputCorrect.toUpperCase(), outputByProgram.toUpperCase())
+
+            })
+
+        } }
 
         return output
     }
